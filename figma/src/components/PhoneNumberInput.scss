@@ -16,5 +16,24 @@
       letter-spacing: 0em;
       text-align: left;
     }
+    &__Wrapper {
+      height: 500px;
+      min-height: 200px;
+      width: 200px;
+      overflow-y: auto;
+    }
+    &__listItems {
+      display: flex;
+      flex-direction: row;
+    }
+    &__digicode {
+      align-self: flex-end;
+margin-left: auto;
+margin-right: 10px;
+    }
+    &__countrybox {
+      display: flex;
+      flex-direction: row
+    }
   }
   
