@@ -1,10 +1,8 @@
 import PhoneNumberInput from "./components/PhoneNumberInput";
 import useModal from "./service/hooks/useModal";
-import { useEffect } from "react";
 
 const App = () => {
-  const { isOpen, openModal, closeModal, handleOutsideClick, useModalOptions } =
-    useModal();
+  const { isOpen, openModal, closeModal, handleOutsideClick } = useModal();
 
   return (
     <>

@@ -1,43 +1,10 @@
-import React, {
-  useEffect,
-  useRef,
-  ReactNode,
-  useCallback,
-  isValidElement,
-  useState,
-} from "react";
-import "./PhoneNumberInput.scss";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 import Countries from "../service/utils/countries.json";
-import { UpArrowIcon, DownArrowIcon, IconSearch } from "../service/utils/icons";
-import ReactDOM from "react-dom";
-
-interface Country {
-  name: string;
-  code: string;
-  dial_code: string;
-  flag: string;
-}
-
-const PortalContainer: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const portalContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const portalContainer = portalContainerRef.current;
-    if (portalContainer) {
-      portalContainer.innerHTML = ""; // Wyczyść kontener przy każdej zmianie children
-
-      React.Children.forEach(children, (child) => {
-        if (isValidElement(child)) {
-          const portalElement = document.createElement("div");
-          portalContainer.appendChild(portalElement);
-          ReactDOM.render(child, portalElement);
-        }
-      });
-    }
-  }, [children]);
-
-  return <div className="portal-container" ref={portalContainerRef} />;
-};
+import { SearchBox } from "./SearchBox";
+import { SelectedCountryBox } from "./SelectedCountry";
+import { CountriesSelect } from "./CountriesSelect";
+import { PortalContainer } from "./PortalContainer";
+import { Country } from "../service/utils/interface";
 
 type ModalProps = {
   handleOutsideClick: (event: MouseEvent) => void;
@@ -148,105 +115,6 @@ const PhoneNumberInput: React.FC<ModalProps> = ({
           </PortalContainer>
         )}
       </div>
-    </div>
-  );
-};
-
-type CountriesSelectProps = {
-  selectCountry: (country: Country) => void;
-  countries: Country[] | null | undefined;
-  countryCode: string;
-};
-
-const CountriesSelect: React.FC<CountriesSelectProps> = ({
-  selectCountry,
-  countries,
-  countryCode,
-}) => {
-  const [filteredCountries, setFilteredCountries] = useState<Country[] | null>(
-    null
-  );
-
-  useEffect(() => {
-    const updatedFilteredCountries = (countries || []).filter(
-      (country: Country) =>
-        country.name.toLowerCase().includes(countryCode?.toLowerCase() || "")
-    );
-    console.log("selectedCountry", countryCode);
-    setFilteredCountries(updatedFilteredCountries);
-  }, [countries, countryCode]);
-
-  return (
-    <div className="PhoneNumber__Wrapper">
-      {filteredCountries?.map((country: Country, index: number) => (
-        <div
-          className="PhoneNumber__listItems"
-          key={index}
-          onClick={() => selectCountry(country)}
-        >
-          <div>
-            {country.flag}
-            {country.name}
-          </div>
-          <div className="PhoneNumber__digicode">{country.dial_code}</div>{" "}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-type SelectedCountryBoxProps = {
-  open: (value: boolean) => void;
-  openDropdown: boolean;
-  selectedCountry: Country | null | undefined;
-};
-
-const SelectedCountryBox: React.FC<SelectedCountryBoxProps> = ({
-  selectedCountry,
-  open,
-  openDropdown,
-}) => {
-  useEffect(() => {
-    console.log("selectedCountry changed:", selectedCountry);
-  }, [selectedCountry]);
-
-  return (
-    <>
-      <div className="PhoneNumber__countrybox">
-        {selectedCountry && (
-          <>
-            {selectedCountry.flag}
-            {selectedCountry.dial_code}
-          </>
-        )}
-        <div className="PhoneNumber__Icon" onClick={() => open(!openDropdown)}>
-          {openDropdown ? <UpArrowIcon /> : <DownArrowIcon />}
-        </div>
-      </div>
-    </>
-  );
-};
-
-type SearchBoxProps = {
-  handleChange: React.ChangeEventHandler<HTMLInputElement>;
-
-  countryCode: string;
-};
-
-const SearchBox: React.FC<SearchBoxProps> = ({ countryCode, handleChange }) => {
-  return (
-    <div className="search-input">
-      <div className="search-input__icon">
-        <IconSearch />
-      </div>
-      <input
-        type="text"
-        value={countryCode}
-        onChange={handleChange}
-        placeholder="Search"
-        className="search-input__input"
-      />
-      <div className="search-input__divider" />
     </div>
   );
 };
